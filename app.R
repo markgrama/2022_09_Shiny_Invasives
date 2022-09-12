@@ -17,7 +17,7 @@ ui <- fluidPage(
       
       # Input: Selector for
       selectInput("year", "Year:", 2015:2021),
-      numericInput("threshold", "Threshold (absolute value):", value = 0),
+      numericInput("threshold", "Threshold correlation (absolute value):", value = 0),
       numericInput("n_min", "Minimum number of observations:", value = 10)
       
       # Input: Checkbox for whether outliers should be included ----
