@@ -7,7 +7,7 @@ load("pairs_cor.RData")
 ui <- fluidPage(
   
   # App title ----
-  titlePanel("Miles Per Gallon"),
+  titlePanel("Correlations"),
   
   # Sidebar layout with input and output definitions ----
   sidebarLayout(
