@@ -3,6 +3,12 @@
 # Load data
 source("CURRENT_DATA.R")
 load(paste(npms_label))
+
+library(dplyr)
+library(lubridate)
+library(tidyr)
+library(sjPlot)
+library(ggplot2)
 #
 
 #### UI ####
