@@ -45,6 +45,7 @@ ui <- fluidPage(
     column(
       5, "",
       mainPanel(
+        plotOutput("n_plot", height = 320, width = 500),
         # This is the dynamic UI for the plots
         uiOutput("plots")
         # uiOutput("tables")
@@ -170,6 +171,36 @@ server <- function(input, output) {
       })
     })
   }
+  
+  # Plot of N's
+  output$n_plot <- renderPlot({
+    # Create dataset
+    n_year <- numeric()
+    ## Find sample sizes that make sense
+    for(j in 2015:2021){
+        # Check that column exists
+        test_col <- try(
+          {pivot_reac(year = j, kew_local = input$kew_id) |> 
+              select(input$kew_id, ab_native)}, 
+          silent = T
+        )
+        
+        # Fill in columns
+        if(inherits(test_col, "try-error")){next} else{
+          n_year[j - 2014] <- test_col |> na.omit() |> nrow()
+        }
+    }
+    
+    data.frame(year = as.character(2015:2021), n = n_year) |> 
+    ggplot(aes(x = as.numeric(year), y = n)) +
+      geom_line() + xlab(paste(input$kew_id)) + 
+      ylab("Number of observations") + theme_bw() +
+      theme(
+        title = element_text(size = 20, face = "bold"),
+        axis.text.x = element_text(size = 18, face = "bold"),
+        axis.text.y = element_text(size = 18, face = "bold")
+      ) 
+  })
 }
 
 shinyApp(ui, server)
