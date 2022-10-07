@@ -123,7 +123,7 @@ server <- function(input, output) {
     reg <- f_reg(kew_local = kew_id(), pool = T)
     ## Bind results
     reg_predict <- cbind(
-      pooled_plant |> select(ab_native, kew_id()) |> na.omit(),
+      pooled_plant |> select(ab_native, kew_id()) |> filter(get(kew_id()) != 0),
       predict(reg, interval = 'confidence')
     )
 
@@ -222,7 +222,6 @@ server <- function(input, output) {
   pivot_reac <- function(year, kew_local, pool = F){
     # Pooled year trigger
     if(pool == T){
-      
       # Id's for adding up native abundance
       id_native <- d_plant |> 
         filter(StaceIV_nativity == "N") |> pull(kew_id) |> unique()
@@ -249,11 +248,11 @@ server <- function(input, output) {
   }
   ## Regression
   f_reg <- function(year, kew_local, pool = F){
-    # browser()
+    # browser()s
     if(pool == T){
       ## Pooled years
       lm(data = pooled_plant |> select(ab_native, kew_local) |> 
-           as.data.frame(), 
+           filter(get(kew_local) != 0) |> as.data.frame(), 
          ab_native ~ .)
     } else{
       ## Individual year
