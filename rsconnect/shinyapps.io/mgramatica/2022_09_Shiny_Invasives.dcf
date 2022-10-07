@@ -5,10 +5,10 @@ account: mgramatica
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7161760
-bundleId: 6352341
+bundleId: 6380765
 url: https://mgramatica.shinyapps.io/2022_09_Shiny_Invasives/
-when: 1664468555.64358
-lastSyncTime: 1664468555.64358
+when: 1665171791.08861
+lastSyncTime: 1665171791.08861
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: Backup/app.R|Backup/pairs_cor.RData
