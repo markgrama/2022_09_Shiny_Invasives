@@ -21,15 +21,22 @@ library(sjPlot)
 library(ggplot2)
 library(ggpubr)
 
-dic_id <- left_join(
-  sub_id, tax |> select(kew_id, taxon_name), by = "kew_id"
-)
+# Selected taxa
+# dic_id <- left_join(
+#   sub_id, tax |> select(kew_id, taxon_name), by = "kew_id"
+# )
 
-# Filter to selcted taxa
+# All taxa
+dic_id <- d_plant |> select(kew_id, taxon_name_binom) |>
+  mutate(taxon_name = taxon_name_binom, .keep = "unused") |> distinct()
+## Kew id's
+tot_kew_id <- dic_id |> pull(taxon_name)
+
+# Filter to selected taxa
 # tot_mat |> filter(taxon %in% dic_id$taxon_name, n > 5) |> 
 #   pull(taxon) -> sel_taxa
 # sel_kew_id <- dic_id |> filter(taxon_name %in% sel_taxa) |> pull(taxon_name)
-sel_kew_id <- dic_id |> pull(taxon_name)
+# sel_kew_id <- dic_id |> pull(taxon_name)
 #
 
 #### UI ####
@@ -46,8 +53,11 @@ ui <- fluidPage(
       2, "",
       mainPanel(
         # Input: Selector for
-        selectInput(
-          "spec", "Species", sort(sel_kew_id)
+        # selectInput(
+        #   "spec", "Species", sort(sel_kew_id)
+        # ),
+        selectizeInput(
+          "spec", "Species", sort(tot_kew_id), options = list(create = TRUE)
         ),
         checkboxInput("pool_y", "Pool years", value = F),
         checkboxInput("n_trig", "Number of species", value = F)
