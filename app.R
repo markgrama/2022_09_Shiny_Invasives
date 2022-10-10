@@ -1,5 +1,7 @@
 #### SETUP ####
 
+# setwd("C:/Users/mgram/Repos/2022_09_Shiny_Invasives")
+
 # Load data
 source("CURRENT_DATA.R")
 load(gsub("Data/Envir/", "", npms_label))
@@ -45,7 +47,7 @@ ui <- fluidPage(
       mainPanel(
         # Input: Selector for
         selectInput(
-          "spec", "Species", sel_kew_id
+          "spec", "Species", sort(sel_kew_id)
         ),
         checkboxInput("pool_y", "Pool years", value = F),
         checkboxInput("n_trig", "Number of species", value = F)
@@ -97,6 +99,9 @@ ui <- fluidPage(
 
 #### SERVER ####
 
+## FOR SOME REASON INDIVIDUAL PLOTS HAVE TO BE GENERATED IN A LOOP INDEXED
+## FROM 2014 INSTEAD OF 2015 OTHERWISE 2015 DOES NOT SHOW
+
 server <- function(input, output) {
   # Map species to kew_id
   kew_id <- reactive({
@@ -135,7 +140,6 @@ server <- function(input, output) {
         axis.text.y = element_text(size = 18, face = "bold")
       )
   })
-  
   
   # OUTPUT - PLOTS ----
   ## POOLED
@@ -184,7 +188,8 @@ server <- function(input, output) {
   ## INDIVIDUAL
   ### ABUNDANCE
   output$plots_ind <- renderUI({
-    plot_output_list <- lapply(2015:2021, function(i) {
+    plot_output_list <- lapply(2014:2021, function(i) {
+      # browser()
       plotname <- paste("plot", i, sep="")
       plotOutput(plotname, height = 320, width = 500)
     })
@@ -193,13 +198,13 @@ server <- function(input, output) {
     # to display properly.
     do.call(tagList, plot_output_list)
   })
-  for(i in 2015:2021){
+  for(i in 2014:2021){
     # Need local so that each item gets its own number. Without it, the value
     # of i in the renderPlot() will be the same across all instances, because
     # of when the expression is evaluated.
     local({
       my_i <- i
-      
+      # browser()
       # Function to actually render a plot
       plotname <- paste("plot", my_i, sep = "")
       output[[plotname]] <- renderPlot({
@@ -237,7 +242,7 @@ server <- function(input, output) {
   }
   ### NUMBER OF SPECIES
   output$plots_ind_n <- renderUI({
-    plot_output_list <- lapply(2015:2021, function(i) {
+    plot_output_list <- lapply(2014:2021, function(i) {
       plotname <- paste("plot_n", i, sep="")
       plotOutput(plotname, height = 320, width = 500)
     })
@@ -246,7 +251,7 @@ server <- function(input, output) {
     # to display properly.
     do.call(tagList, plot_output_list)
   })
-  for(i in 2015:2021){
+  for(i in 2014:2021){
     # Need local so that each item gets its own number. Without it, the value
     # of i in the renderPlot() will be the same across all instances, because
     # of when the expression is evaluated.
@@ -306,7 +311,7 @@ server <- function(input, output) {
   ## INDIVIDUAL
   ### ABUNDANCE
   output$tabs_ind <- renderUI({
-    table_output_list <- lapply(2015:2021, function(i) {
+    table_output_list <- lapply(2014:2021, function(i) {
       tablename <- paste("table", i, sep="")
       htmlOutput(tablename)
     })
@@ -317,7 +322,7 @@ server <- function(input, output) {
   })
   ### NUMBER OF SPECIES
   output$tabs_ind_n <- renderUI({
-    table_output_list <- lapply(2015:2021, function(i) {
+    table_output_list <- lapply(2014:2021, function(i) {
       tablename <- paste("table_n", i, sep="")
       htmlOutput(tablename)
     })
